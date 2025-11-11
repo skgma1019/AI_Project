@@ -1,0 +1,172 @@
+{
+    "계란형": [
+        {
+            "hairstyle": "가르마",
+            "count": 147
+        },
+        {
+            "hairstyle": "바디",
+            "count": 123
+        },
+        {
+            "hairstyle": "빌드",
+            "count": 112
+        },
+        {
+            "hairstyle": "보브",
+            "count": 87
+        },
+        {
+            "hairstyle": "리젠트",
+            "count": 85
+        },
+        {
+            "hairstyle": "리프",
+            "count": 85
+        },
+        {
+            "hairstyle": "보니",
+            "count": 52
+        },
+        {
+            "hairstyle": "루프",
+            "count": 15
+        }
+    ],
+    "긴 타원형": [
+        {
+            "hairstyle": "가르마",
+            "count": 207
+        },
+        {
+            "hairstyle": "빌드",
+            "count": 190
+        },
+        {
+            "hairstyle": "바디",
+            "count": 139
+        },
+        {
+            "hairstyle": "보니",
+            "count": 118
+        },
+        {
+            "hairstyle": "보브",
+            "count": 95
+        },
+        {
+            "hairstyle": "리프",
+            "count": 74
+        },
+        {
+            "hairstyle": "리젠트",
+            "count": 44
+        },
+        {
+            "hairstyle": "루프",
+            "count": 25
+        }
+    ],
+    "둥근형": [
+        {
+            "hairstyle": "보브",
+            "count": 244
+        },
+        {
+            "hairstyle": "가르마",
+            "count": 221
+        },
+        {
+            "hairstyle": "빌드",
+            "count": 147
+        },
+        {
+            "hairstyle": "보니",
+            "count": 113
+        },
+        {
+            "hairstyle": "바디",
+            "count": 111
+        },
+        {
+            "hairstyle": "리프",
+            "count": 97
+        },
+        {
+            "hairstyle": "리젠트",
+            "count": 87
+        },
+        {
+            "hairstyle": "루프",
+            "count": 48
+        }
+    ],
+    "사각형": [
+        {
+            "hairstyle": "보브",
+            "count": 222
+        },
+        {
+            "hairstyle": "빌드",
+            "count": 187
+        },
+        {
+            "hairstyle": "가르마",
+            "count": 154
+        },
+        {
+            "hairstyle": "바디",
+            "count": 149
+        },
+        {
+            "hairstyle": "보니",
+            "count": 117
+        },
+        {
+            "hairstyle": "리프",
+            "count": 101
+        },
+        {
+            "hairstyle": "리젠트",
+            "count": 68
+        },
+        {
+            "hairstyle": "루프",
+            "count": 28
+        }
+    ],
+    "역삼각형": [
+        {
+            "hairstyle": "빌드",
+            "count": 421
+        },
+        {
+            "hairstyle": "바디",
+            "count": 327
+        },
+        {
+            "hairstyle": "보브",
+            "count": 287
+        },
+        {
+            "hairstyle": "가르마",
+            "count": 270
+        },
+        {
+            "hairstyle": "보니",
+            "count": 184
+        },
+        {
+            "hairstyle": "리프",
+            "count": 131
+        },
+        {
+            "hairstyle": "리젠트",
+            "count": 124
+        },
+        {
+            "hairstyle": "루프",
+            "count": 55
+        }
+    ]
+}
