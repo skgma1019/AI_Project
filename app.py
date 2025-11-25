@@ -9,6 +9,7 @@ from PIL import Image
 import torch.nn.functional as F
 import warnings
 
+# ★★★ 'url_for'가 'redirect' 뒤에 있었는데, 명시적으로 앞으로 가져왔습니다. ★★★
 from flask import Flask, request, render_template, redirect, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 
@@ -21,6 +22,29 @@ MODEL_PATH = "face_shape_classifier.pth"
 STATS_FILE = "recommendation_stats.json"
 TOP_K_RECOMMENDATIONS = 3
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+# ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+# 1. 1순위 헤어스타일 예시 이미지 매핑
+# -----------------------------------------------------------------
+# (key): 'recommendation_stats.json'에 있는 '한글' 헤어스타일 이름
+# (value): 'static/hairstyles/' 폴더 안에 저장할 '영어' 이미지 파일명
+#
+# ※※※ 중요 ※※※
+# 8종류의 헤어스타일 이름을 본인의 JSON 파일과 이미지 파일에 맞게
+# '정확하게' 수정해야 합니다. (이것은 저의 추측입니다)
+# ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+STYLE_IMAGE_MAP = {
+    '가르마': '가르마.png',
+    '루프': '루프.png',
+    '리젠트': '리젠트.png',
+    '리프': '리프.png',
+    '바디': '바디.png',
+    '빌드': '빌드.png',
+    '보브': '보브.png',
+    '보니': '보니.png'
+    # (JSON에 있는 8개 이름을 모두 정확히 입력하세요)
+}
+
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -114,6 +138,25 @@ def index():
                 "web_image_path": web_image_path
             }
             
+            # ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+            # 2. 1순위 헤어스타일 이미지 경로 추가
+            # -----------------------------------------------------------------
+            # 'recs' (recommendations) 리스트가 비어있지 않은지 확인
+            # ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+            if recs:
+                # 1. 1순위 헤어스타일 이름 가져오기 (예: '빌드')
+                top_style_name = recs[0].get('hairstyle', '')
+                
+                # 2. STYLE_IMAGE_MAP에서 해당 이미지 파일명 찾기
+                #    (못 찾을 경우 'default.jpg'를 사용 -> 혹시 모를 오류 방지)
+                top_style_image_file = STYLE_IMAGE_MAP.get(top_style_name, 'default.jpg')
+                
+                # 3. HTML에서 사용할 최종 경로 생성 (예: /static/hairstyles/build.jpg)
+                result_data['top_style_image_path'] = url_for('static', filename=f'hairstyles/{top_style_image_file}')
+            else:
+                # 추천 목록이 없는 경우 (오류 등)
+                result_data['top_style_image_path'] = url_for('static', filename='hairstyles/default.jpg')
+            
             return render_template('index.html', result=result_data)
 
     return render_template('index.html', result=None)
@@ -123,4 +166,5 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 if __name__ == '__main__':
+    # debug=True는 개발 중에만 사용하고, 실제 배포 시에는 False로 변경하세요.
     app.run(host='0.0.0.0', port=5000, debug=True)

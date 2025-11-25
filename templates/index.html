@@ -5,128 +5,344 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>K-hairstyle AI 추천 시스템</title>
     <style>
+        /* * -------------------------
+         * 기본 & 레이아웃 스타일
+         * -------------------------
+         */
         body {
-            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
-            margin: 0;
-            padding: 40px;
-            background-color: #f4f4f4;
+            font-family: -apple-system, BlinkMacSystemFont, 'Malgun Gothic', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
             display: flex;
-            justify-content: center;
-            align-items: center;
             flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
         }
+
         .container {
             width: 100%;
-            max-width: 600px;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            max-width: 680px; /* ★★★ 전체적인 카드 폭을 조금 넓혔습니다 (선택 사항) */
+            margin-bottom: 30px;
         }
+
         h1 {
+            font-size: 2.5em;
+            color: #2c3e50;
             text-align: center;
-            color: #333;
+            margin-bottom: 30px;
+            font-weight: 700;
         }
-        form {
-            text-align: center;
-        }
-        input[type="file"] {
+
+        h2 {
+            font-size: 1.8em;
+            color: #16a085;
+            border-bottom: 3px solid #16a085;
+            padding-bottom: 10px;
+            margin-top: 40px;
             margin-bottom: 20px;
-            border: 2px dashed #ddd;
-            padding: 20px;
-            display: block;
-            width: 90%;
-            margin: 20px auto;
-            cursor: pointer;
+            font-weight: 600;
         }
-        input[type="submit"] {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
+
+        h3 {
+            font-size: 1.4em;
+            color: #2980b9;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-weight: 600;
         }
-        input[type="submit"]:hover {
-            background-color: #0056b3;
+
+        /* * -------------------------
+         * 1. 업로드 영역 스타일
+         * -------------------------
+         */
+        .upload-section {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
         }
-        
-        /* 결과 표시 영역 */
-        .result {
-            margin-top: 30px;
-            border-top: 1px solid #eee;
-            padding-top: 30px;
+
+        #file-input {
+            display: none;
         }
-        .result h2 {
-            color: #007bff;
-        }
-        .result-box {
-            display: flex;
-            gap: 20px;
-        }
-        .result-box img {
-            width: 200px;
-            height: auto;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            object-fit: cover; /* 이미지가 잘리지 않도록 */
-        }
-        .result-text ul {
-            list-style: none;
-            padding: 0;
-        }
-        .result-text li {
-            font-size: 18px;
-            padding: 8px;
-            background-color: #f9f9f9;
-            margin-bottom: 5px;
-            border-radius: 4px;
-        }
-        .result-text li strong {
+
+        .file-label {
             display: inline-block;
-            width: 80px;
+            padding: 12px 25px;
+            background-color: #3498db;
+            color: white;
+            font-size: 1.1em;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .file-label:hover {
+            background-color: #2980b9;
+        }
+
+        #file-name {
+            display: inline-block;
+            margin-top: 15px;
+            font-size: 1em;
             color: #555;
         }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: white;
+            background-color: #1abc9c;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 25px;
+        }
+
+        .submit-btn:hover {
+            background-color: #16a085;
+        }
+
+        /* * -------------------------
+         * 2. [AI 분석 결과] UI 개선
+         * -------------------------
+         */
+        
+        .result-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            /* ★★★ 'display: flex'를 제거하여 블록 요소로 변경 */
+            /* display: flex; (제거) */
+            /* flex-wrap: wrap; (제거) */
+        }
+
+        /* ★★★ '.result-image' 관련 CSS는 아래 새 CSS로 대체됨 (제거) */
+        
+        .result-content {
+            padding: 30px;
+            /* ★★★ 'flex: 1', 'min-width' 제거 */
+        }
+
+        /* ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★ */
+        /* ★ 3. (새로 추가) 이미지 비교 레이아웃 CSS ★ */
+        /* ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★ */
+
+        /* 두 이미지를 감싸는 flex 컨테이너 */
+        .image-comparison-wrapper {
+            display: flex;
+            width: 100%;
+            border-bottom: 1px solid #eee; /* 텍스트 영역과 구분선 */
+        }
+
+        /* "내 사진", "1순위 추천" 각각의 박스 */
+        .comparison-box {
+            flex: 1; /* 1:1 비율로 공간을 나눔 */
+            padding: 20px;
+            text-align: center;
+            min-width: 0; /* flex item이 줄어들 수 있게 함 */
+        }
+
+        /* 왼쪽 박스 (내 사진) */
+        .comparison-box.user-photo {
+            border-right: 1px solid #eee; /* 두 이미지 사이 구분선 */
+        }
+
+        /* 박스 안의 제목 (내 사진, 1순위 추천) */
+        .comparison-box h4 {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        
+        /* 1순위 추천 제목 색상 강조 */
+        .comparison-box.recommended-style h4 {
+            color: #d35400; 
+        }
+
+        /* 두 이미지 공통 스타일 (부모 박스에 꽉 차게) */
+        .comparison-image { /* ★★★ 기존 .result-image, .top-style-image 대신 사용 */
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid #ddd;
+            aspect-ratio: 1 / 1; /* ★★★ 1:1 비율로 강제 (선택 사항) */
+        }
+
+        /* ★★★ (제거) 1순위 예시 관련 CSS (.top-style-preview 등) */
+        /* 위 '.comparison-box' 스타일로 대체되었습니다. */
+
+
+        /* * -------------------------
+         * 4. 기존 스타일 (텍스트 영역)
+         * -------------------------
+         */
+
+        .analysis-result p {
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
+
+        .analysis-result strong {
+            color: #d35400; 
+            font-size: 1.1em;
+        }
+
+        .confidence {
+            font-size: 1em !important;
+            color: #7f8c8d;
+            margin-top: -10px;
+        }
+
+        /* "추천 스타일 TOP 3" 리스트 */
+        .recommendation-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 25px;
+        }
+
+        .rec-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .rec-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 순위별 색상 부여 */
+        .rank-1 { background-color: #fffbe6; border-left: 5px solid #f1c40f; }
+        .rank-2 { background-color: #f4f6f7; border-left: 5px solid #bdc3c7; }
+        .rank-3 { background-color: #fff0e6; border-left: 5px solid #e67e22; }
+
+        .rank {
+            font-size: 1.3em;
+            font-weight: 700;
+            min-width: 60px;
+        }
+        
+        .rank-1 .rank { color: #f1c40f; }
+        .rank-2 .rank { color: #7f8c8d; }
+        .rank-3 .rank { color: #e67e22; }
+
+        .style-name {
+            font-size: 1.2em;
+            font-weight: 600;
+            flex-grow: 1;
+            margin: 0 15px;
+        }
+
+        .preference {
+            font-size: 1em;
+            color: #555;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        /* ★★★ (제거) 미디어 쿼리 내 불필요한 스타일 */
+        @media (min-width: 600px) {
+             /* .result-image 관련 스타일 제거 */
+        }
+
+
     </style>
 </head>
 <body>
+
     <div class="container">
-        <h1>🎉 K-hairstyle AI 추천 시스템</h1>
-        
-        <form method="POST" enctype="multipart/form-data">
-            <input type="file" name="file" accept="image/png, image/jpeg" required>
-            <input type="submit" value="분석 및 추천받기">
-        </form>
-
+        <h1>🎨 K-hairstyle AI 추천 시스템</h1>
         {% if result %}
-        <div class="result">
+        <section class="result-section">
             <h2>[AI 분석 결과]</h2>
-            
-            <div class="result-box">
-                <img src="{{ result.web_image_path }}" alt="업로드된 이미지">
-                
-                <div class="result-text">
-                    <h3>분석 결과</h3>
-                    <p>
-                        고객님의 얼굴형은 <strong>{{ result.face_shape }}</strong>에 가깝습니다.
-                        (신뢰도: {{ result.confidence }})
-                    </p>
-                    
-                    <h3>추천 스타일 TOP 3</h3>
-                    <ul>
-                        {% for item in result.recommendations %}
-                            <li>
-                                <strong>{{ loop.index }}순위.</strong> {{ item.hairstyle }} 
-                                (선호도: {{ item.count }}건)
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        </div>
-        {% endif %}
 
+            <div class="result-card">
+                
+                <div class="image-comparison-wrapper">
+                    
+                    <div class="comparison-box user-photo">
+                        <h4>내 사진</h4>
+                        <img src="{{ result.web_image_path }}" 
+                             alt="업로드된 이미지" 
+                             class="comparison-image"> </div>
+
+                    {% if result.recommendations %}
+                    <div class="comparison-box recommended-style">
+                        <h4>1순위 추천 ({{ result.recommendations[0].hairstyle }})</h4>
+                        <img src="{{ result.top_style_image_path }}" 
+                             alt="{{ result.recommendations[0].hairstyle }} 스타일 예시" 
+                             class="comparison-image"> </div>
+                    {% endif %}
+                </div>
+                
+                <div class="result-content">
+                    
+                    <div class="analysis-result">
+                        <h3>분석 결과</h3>
+                        <p>고객님의 얼굴형은 <strong>{{ result.face_shape }}</strong>에 가깝습니다.</p>
+                        <p class="confidence">(신뢰도: {{ result.confidence }})</p>
+                    </div>
+
+                    <div class="recommendations">
+                        <h3>추천 스타일 TOP 3</h3>
+                        <ul class="recommendation-list">
+                            {% if result.recommendations %}
+                                {% for item in result.recommendations %}
+                                    <li class="rec-item rank-{{ loop.index }}"> 
+                                        <span class="rank">{{ loop.index }}순위</span>
+                                        <span class="style-name">{{ item.hairstyle }}</span>
+                                        <span class="preference">(선호도: {{ item.count }}건)</span>
+                                    </li>
+                                {% endfor %}
+                            {% endif %} 
+                        </ul>
+                    </div>
+                </div> 
+
+            </div> </section>
+        {% endif %} 
+                <section class="upload-section">
+            <form method="POST" enctype="multipart/form-data">
+
+                <input type="file" id="file-input" name="file" accept="image/*" onchange="displayFileName(this)" required>
+                
+                <label for="file-input" class="file-label">📸 사진 업로드 (또는 찍기)</label>
+                
+                <p id="file-name">선택된 파일 없음</p>
+
+                <button type="submit" class="submit-btn">분석 및 추천받기</button>
+            </form>
+        </section>
     </div>
+
+    <script>
+        function displayFileName(input) {
+            const fileNameElement = document.getElementById('file-name');
+            if (input.files && input.files.length > 0) {
+                fileNameElement.textContent = input.files[0].name;
+            } else {
+                fileNameElement.textContent = '선택된 파일 없음';
+            }
+        }
+    </script>
+
 </body>
 </html>
